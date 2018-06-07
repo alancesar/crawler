@@ -1,0 +1,27 @@
+version: "3"
+services:
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - "27017"
+
+  crawler-service:
+    container_name: crawler-service
+    build: 
+      context: ./crawler-service
+    environment: 
+      - MONGODB_URI=mongodb://mongo:27017/crawler
+    depends_on:
+      - mongo
+    ports:
+      - "3000:3000"
+  
+  crawler-panel:
+    container_name: crawler-panel
+    build: 
+      context: ./crawler-panel
+    depends_on:
+      - crawler-service
+    ports:
+      - "80:80"
